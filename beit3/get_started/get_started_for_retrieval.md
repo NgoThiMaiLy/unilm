@@ -21,34 +21,17 @@
     ...             
 ```
 
-3.  Download [beit3.spm](https://conversationhub.blob.core.windows.net/beit-share-public/beit3/sentencepiece/beit3.spm?sv=2021-10-04&st=2023-06-08T11%3A16%3A02Z&se=2033-06-09T11%3A16%3A00Z&sr=c&sp=r&sig=N4pfCVmSeq4L4tS8QbrFVsX6f6q844eft8xSuXdxU48%3D) is the sentencepiece model used for tokenizing texts.
-
-I created index json files and placed them here:
-
+3.  Then generate the index json files using the following command. [beit3.spm](https://conversationhub.blob.core.windows.net/beit-share-public/beit3/sentencepiece/beit3.spm?sv=2021-10-04&st=2023-06-08T11%3A16%3A02Z&se=2033-06-09T11%3A16%3A00Z&sr=c&sp=r&sig=N4pfCVmSeq4L4tS8QbrFVsX6f6q844eft8xSuXdxU48%3D) is the sentencepiece model used for tokenizing texts.
 ```
-unilm/beit3/
-  train_retrieval.jsonl
-  val_retrieval.jsonl
-```
-Please copy these files and put them into your_data folder as following structure:
+from datasets import COSMOSRetrievalDataset
+from transformers import XLMRobertaTokenizer
 
-```
-/path/to/your_data/
-  annotations/
-    train_data.json
-    val_data.json
-    test_data.json
-  train/            
-    0.jpg                
-    ...
-  val/              
-    0.jpg
-    ...
-  test/              
-    0.jpg
-    ...
-  train_retrieval.jsonl
-  val_retrieval.jsonl          
+tokenizer = XLMRobertaTokenizer("/your_beit3_model_path/beit3.spm")
+
+COSMOSRetrievalDataset.make_retrieval_cosmos_dataset_index(
+    data_path="/path/to/your_data",
+    tokenizer=tokenizer,
+)
 ```
 
 4.  Download the pretrained BEiT3-base model weights [`beit3_base_itc_patch16_224`](https://conversationhub.blob.core.windows.net/beit-share-public/beit3/pretraining/beit3_base_patch16_224.pth?sv=2021-10-04&st=2023-06-08T11%3A16%3A02Z&se=2033-06-09T11%3A16%3A00Z&sr=c&sp=r&sig=N4pfCVmSeq4L4tS8QbrFVsX6f6q844eft8xSuXdxU48%3D)
