@@ -1,4 +1,90 @@
 # Fine-tuning BEiT-3 on Image-text Retrieval
+## COSMOS Retrieval Setup
+
+1. [Setup environment](../README.md#setup).
+2. Download the dataset by filling out the form [here](https://docs.google.com/forms/d/13kJQ2wlv7sxyXoaM1Ddon6Nq7dUJY_oftl-6xzwTGow/viewform?edit_requested=true), then organize the dataset as following structure:
+
+```
+/path/to/your_data/
+  annotations/
+    train_data.json
+    val_data.json
+    test_data.json
+  train/            
+    0.jpg                
+    ...
+  val/              
+    0.jpg
+    ...
+  test/              
+    0.jpg
+    ...             
+```
+
+3.  Download [beit3.spm](https://conversationhub.blob.core.windows.net/beit-share-public/beit3/sentencepiece/beit3.spm?sv=2021-10-04&st=2023-06-08T11%3A16%3A02Z&se=2033-06-09T11%3A16%3A00Z&sr=c&sp=r&sig=N4pfCVmSeq4L4tS8QbrFVsX6f6q844eft8xSuXdxU48%3D) is the sentencepiece model used for tokenizing texts.
+
+I created index json files and placed them here:
+
+```
+unilm/beit3/
+  train_retrieval.jsonl
+  val_retrieval.jsonl
+```
+Please copy these files and put them into your_data folder as following structure:
+
+```
+/path/to/your_data/
+  annotations/
+    train_data.json
+    val_data.json
+    test_data.json
+  train/            
+    0.jpg                
+    ...
+  val/              
+    0.jpg
+    ...
+  test/              
+    0.jpg
+    ...
+  train_retrieval.jsonl
+  val_retrieval.jsonl          
+```
+
+4.  Download the pretrained model weights in [README.md](../README.md#pretrained-models)
+
+## Fine-tuning BEiT-3 on COSMOS Retrieval
+
+```bash       
+python  run_beit3_finetuning.py \
+        --model beit3_base_patch16_384 \
+        --input_size 384 \
+        --task cosmos_retrieval \
+        --batch_size 192 \
+        --layer_decay 0.65 \
+        --lr 2e-4 \
+        --epochs 15 \
+        --warmup_epochs 3 \
+        --drop_path 0.2 \
+        --sentencepiece_model /your_beit3_model_path/beit3.spm \
+        --finetune /your_beit3_model_path/beit3_base_itc_patch16_224.zip \
+        --data_path /path/to/your_data \
+        --output_dir /path/to/save/your_model \
+        --log_dir /path/to/save/your_model/log \
+        --weight_decay 0.05 \
+        --seed 42 \
+        --save_ckpt_freq 5 \
+        --enable_deepspeed \
+        --checkpoint_activations
+```
+- `--batch_size`: batch size per GPU. Effective batch size = `number of GPUs` * `--batch_size` * `--update_freq`. So in the above example, the effective batch size is `192*16 = 3072`.
+- `--finetune`: weight path of your pretrained models; please download the pretrained model weights in [README.md](../README.md#pretrained-models)
+- `--task`: **coco_retrieval** for COCO retrieval, **flickr30k** for Flickr30k retrieval
+- `--lr`: 2e-4 for COCO retrieval, 1e-4 for Flickr30k retrieval
+- `--epochs`: 15 for COCO retrieval, 20 for Flickr30k retrieval
+- `--warmup_epochs`: 3 for COCO retrieval, 5 for Flickr30k retrieval
+- `--checkpoint_activations`: using gradient checkpointing for saving GPU memory
+
 
 ## COCO Retrieval Setup
 
