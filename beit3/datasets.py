@@ -249,8 +249,8 @@ def _make_retrieval_cosmos_dataset_index(
                         "image_path": image_path,
                         "text_segment": token_ids,
                         "image_id": int(image_path.split("/")[-1].split(".")[0]),
-                        # "context_label": 0,
-                        # "bert_base_score": np.nan
+                        "context_label": 0,
+                        "bert_base_score": np.nan
                 })
             elif split == "test":
                 tokens = tokenizer.tokenize(item["caption1"])
@@ -809,7 +809,7 @@ class COSMOSRetrievalDataset(BaseDataset):
     def make_retrieval_cosmos_dataset_index(data_path, tokenizer):
         _make_retrieval_cosmos_dataset_index(data_path, tokenizer, split="train")
         _make_retrieval_cosmos_dataset_index(data_path, tokenizer, split="val")
-        _make_retrieval_cosmos_dataset_index(data_path, tokenizer, split="test")
+        # _make_retrieval_cosmos_dataset_index(data_path, tokenizer, split="test")
 
 
 class COSMOSReasoningDataset(BaseDataset):
