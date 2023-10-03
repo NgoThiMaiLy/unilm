@@ -77,12 +77,9 @@ python  run_beit3_finetuning.py \
         --enable_deepspeed \
         --checkpoint_activations
 ```
-- `--batch_size`: batch size per GPU. Effective batch size = `number of GPUs` * `--batch_size` * `--update_freq`. So in the above example, the effective batch size is `192*16 = 3072`.
+- `--batch_size`: batch size per GPU. Effective batch size = `number of GPUs` * `--batch_size` * `--update_freq`.
 - `--finetune`: weight path of your pretrained models; please download the pretrained model weights in [README.md](../README.md#pretrained-models)
-- `--task`: **coco_retrieval** for COCO retrieval, **flickr30k** for Flickr30k retrieval
-- `--lr`: 2e-4 for COCO retrieval, 1e-4 for Flickr30k retrieval
-- `--epochs`: 15 for COCO retrieval, 20 for Flickr30k retrieval
-- `--warmup_epochs`: 3 for COCO retrieval, 5 for Flickr30k retrieval
+- `--task`: **cosmos_retrieval** for COSMOS retrieval
 - `--checkpoint_activations`: using gradient checkpointing for saving GPU memory
 
 
