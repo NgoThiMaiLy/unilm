@@ -34,16 +34,19 @@ COSMOSRetrievalDataset.make_retrieval_cosmos_dataset_index(
 )
 ```
 
-4.  Download the pretrained BEiT3-base model weights [`beit3_base_itc_patch16_224`](https://conversationhub.blob.core.windows.net/beit-share-public/beit3/pretraining/beit3_base_itc_patch16_224.pth?sv=2021-10-04&st=2023-06-08T11%3A16%3A02Z&se=2033-06-09T11%3A16%3A00Z&sr=c&sp=r&sig=N4pfCVmSeq4L4tS8QbrFVsX6f6q844eft8xSuXdxU48%3D)
+4.
+   Download the pretrained **BEiT3-base** model weights [`beit3_base_itc_patch16_224`](https://conversationhub.blob.core.windows.net/beit-share-public/beit3/pretraining/beit3_base_itc_patch16_224.pth?sv=2021-10-04&st=2023-06-08T11%3A16%3A02Z&se=2033-06-09T11%3A16%3A00Z&sr=c&sp=r&sig=N4pfCVmSeq4L4tS8QbrFVsX6f6q844eft8xSuXdxU48%3D)
 
-## Fine-tuning BEiT-3 on COSMOS Retrieval
+  Download the pretrained **BEiT3-large** model weights [`beit3_large_itc_patch16_224`](https://conversationhub.blob.core.windows.net/beit-share-public/beit3/pretraining/beit3_large_itc_patch16_224.pth?sv=2021-10-04&st=2023-06-08T11%3A16%3A02Z&se=2033-06-09T11%3A16%3A00Z&sr=c&sp=r&sig=N4pfCVmSeq4L4tS8QbrFVsX6f6q844eft8xSuXdxU48%3D)
+
+## Fine-tuning BEiT-3 base on COSMOS Retrieval
 
 ```bash       
 python  run_beit3_finetuning.py \
         --model beit3_base_patch16_384 \
         --input_size 384 \
         --task cosmos_retrieval \
-        --batch_size 192 \
+        --batch_size 96 \
         --layer_decay 0.65 \
         --lr 2e-4 \
         --epochs 15 \
@@ -60,6 +63,32 @@ python  run_beit3_finetuning.py \
         --enable_deepspeed \
         --checkpoint_activations
 ```
+
+## Fine-tuning BEiT-3 large on COSMOS Retrieval
+
+```bash       
+python  run_beit3_finetuning.py \
+        --model beit3_large_patch16_384 \
+        --input_size 384 \
+        --task cosmos_retrieval \
+        --batch_size 96 \
+        --layer_decay 0.85 \
+        --lr 5e-5 \
+        --epochs 15 \
+        --warmup_epochs 3 \
+        --drop_path 0.2 \
+        --sentencepiece_model /your_beit3_model_path/beit3.spm \
+        --finetune /your_beit3_model_path/beit3_large_itc_patch16_224.zip \
+        --data_path /path/to/your_data \
+        --output_dir /path/to/save/your_model \
+        --log_dir /path/to/save/your_model/log \
+        --weight_decay 0.05 \
+        --seed 42 \
+        --save_ckpt_freq 5 \
+        --enable_deepspeed \
+        --checkpoint_activations
+```
+
 - `--batch_size`: batch size per GPU. Effective batch size = `number of GPUs` * `--batch_size` * `--update_freq`.
 - `--finetune`: weight path of your pretrained models; please download the pretrained model weights in [README.md](../README.md#pretrained-models)
 - `--task`: **cosmos_retrieval** for COSMOS retrieval
